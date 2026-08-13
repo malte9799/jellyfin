@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Poster Manager</title>
+</head>
+<body>
+<div id="PosterManagerConfigPage" data-role="page" class="page type-interior pluginConfigurationPage"
+     data-require="emby-input,emby-button,emby-select,emby-checkbox">
+    <div data-role="content">
+        <div class="content-primary">
+            <form id="PosterManagerConfigForm">
+
+                <h2>ThePosterDB</h2>
+
+                <div class="inputContainer">
+                    <input is="emby-input" type="text" id="SessionCookie" label="Session cookie" />
+                    <div class="fieldDescription">
+                        Required. ThePosterDB sits behind Cloudflare, so requests need a browser
+                        session. Open theposterdb.com while logged in, copy the full
+                        <code>Cookie</code> request header from your browser's network tab
+                        (it must include <code>cf_clearance</code>) and paste it here.
+                    </div>
+                </div>
+
+                <div class="inputContainer">
+                    <input is="emby-input" type="text" id="UserAgent" label="User agent" />
+                    <div class="fieldDescription">
+                        Must match the browser the cookie was copied from, or Cloudflare rejects it.
+                    </div>
+                </div>
+
+                <h2>Mediux</h2>
+
+                <div class="inputContainer">
+                    <input is="emby-input" type="password" id="MediuxApiToken" label="API token" />
+                    <div class="fieldDescription">
+                        Sent as a bearer token to the Mediux API. Leave empty to disable Mediux.
+                        Mediux looks items up by TMDB ID, so items need a TMDB ID to return results.
+                    </div>
+                </div>
+
+                <div class="selectContainer">
+                    <select is="emby-select" id="MediuxDownloadQuality" label="Download quality">
+                        <option value="original">Original</option>
+                        <option value="optimized">Optimized (smaller JPG)</option>
+                    </select>
+                </div>
+
+                <h2>General</h2>
+
+                <div class="inputContainer">
+                    <input is="emby-input" type="number" id="RequestDelayMs" label="Request delay (ms)" min="0" step="50" />
+                    <div class="fieldDescription">Pause between paged requests when scraping.</div>
+                </div>
+
+                <div class="inputContainer">
+                    <input is="emby-input" type="number" id="CacheMinutes" label="Cache duration (minutes)" min="0" step="5" />
+                </div>
+
+                <div>
+                    <button is="emby-button" type="submit" class="raised button-submit block">
+                        <span>Save</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+            var pluginId = 'a058f2e6-e8e6-4b4f-a791-73aa6a1ecb62';
+
+            document.querySelector('#PosterManagerConfigPage')
+                .addEventListener('pageshow', function () {
+                    Dashboard.showLoadingMsg();
+                    ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                        document.querySelector('#SessionCookie').value = config.SessionCookie || '';
+                        document.querySelector('#UserAgent').value = config.UserAgent || '';
+                        document.querySelector('#MediuxApiToken').value = config.MediuxApiToken || '';
+                        document.querySelector('#MediuxDownloadQuality').value = config.MediuxDownloadQuality || 'original';
+                        document.querySelector('#RequestDelayMs').value = config.RequestDelayMs || 500;
+                        document.querySelector('#CacheMinutes').value = config.CacheMinutes || 30;
+                        Dashboard.hideLoadingMsg();
+                    });
+                });
+
+            document.querySelector('#PosterManagerConfigForm')
+                .addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    Dashboard.showLoadingMsg();
+                    ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                        config.SessionCookie = document.querySelector('#SessionCookie').value;
+                        config.UserAgent = document.querySelector('#UserAgent').value;
+                        config.MediuxApiToken = document.querySelector('#MediuxApiToken').value;
+                        config.MediuxDownloadQuality = document.querySelector('#MediuxDownloadQuality').value;
+                        config.RequestDelayMs = parseInt(document.querySelector('#RequestDelayMs').value, 10) || 0;
+                        config.CacheMinutes = parseInt(document.querySelector('#CacheMinutes').value, 10) || 0;
+
+                        ApiClient.updatePluginConfiguration(pluginId, config).then(function (result) {
+                            Dashboard.processPluginConfigurationUpdateResult(result);
+                        });
+                    });
+                    return false;
+                });
+        })();
+    </script>
+</div>
+</body>
+</html>

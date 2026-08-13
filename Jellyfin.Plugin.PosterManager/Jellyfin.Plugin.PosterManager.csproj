@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <!-- Ship HtmlAgilityPack.dll alongside the plugin. Jellyfin host assemblies are
+         excluded from runtime output below so we never overwrite the server's copies. -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Pinned to the server version. The referenced-assembly version must be <= what
+         the Jellyfin server ships, so do not bump past the running server. -->
+    <PackageReference Include="Jellyfin.Controller" Version="10.11.10" ExcludeAssets="runtime" />
+    <PackageReference Include="Jellyfin.Model" Version="10.11.10" ExcludeAssets="runtime" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.71" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\configPage.html" />
+    <EmbeddedResource Include="Web\postermanager.js" />
+  </ItemGroup>
+
+</Project>

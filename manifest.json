@@ -1,0 +1,21 @@
+[
+  {
+    "guid": "a058f2e6-e8e6-4b4f-a791-73aa6a1ecb62",
+    "name": "Poster Manager",
+    "description": "Browse and apply posters from ThePosterDB and Mediux directly in the Jellyfin image editor.",
+    "overview": "Adds a poster browser to the Jellyfin image editor.",
+    "owner": "malte9799",
+    "category": "Metadata",
+    "imageUrl": "https://raw.githubusercontent.com/malte9799/jellyfin/main/assets/icon.png",
+    "versions": [
+      {
+        "version": "1.0.0.0",
+        "changelog": "Initial release.",
+        "targetAbi": "10.11.10.0",
+        "sourceUrl": "https://github.com/malte9799/jellyfin/releases/download/v1.0.0.0/posterManager_1.0.0.0.zip",
+        "checksum": "495f2a5520e4f131666e0e5f28875fa1",
+        "timestamp": "2026-08-13T17:47:23Z"
+      }
+    ]
+  }
+]
